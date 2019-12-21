@@ -1,0 +1,22 @@
+{
+  "name": "food_buddy",
+  "version": "1.0.0",
+  "description": "Application that suggests meals based on what ingredients you have and allows you to plan your meals & diet",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meehaw1337/food-buddy.git"
+  },
+  "author": "Michal Komar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meehaw1337/food-buddy/issues"
+  },
+  "homepage": "https://github.com/meehaw1337/food-buddy#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
