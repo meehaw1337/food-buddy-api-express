@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/meehaw1337/food-buddy#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.8.2"
   }
 }
