@@ -1,28 +1,27 @@
-import { Pool } from 'pg';
-import express from 'express';
+const express = require('express')
+const Sequelize = require('sequelize')
+const Models = require('./models/models')
+const UsersRouter = require('./routes/users')
 
-const db = new Pool({
+/* Establish database connection */
+/* TODO: Export sequelize object to a separate file, then other files will be able to import it */
+const sequelize = new Sequelize('foodbuddy_db', 'postgres', 'Lubieplacki1337', {
     host: 'localhost',
-    port: 5432,
-    database: 'foodbuddy_db',
-    user: 'postgres',
-    password: 'Lubieplacki1337'
+    dialect: 'postgres'
 })
 
+/* Acquire data models */
+const { Category, Product, User, UserProduct, Ingredient, Recipe } = Models(sequelize)
+
+/* Create database tables if they don't exist */
+sequelize.sync()
+
+/* Create app instance */
 const app = express()
-const PORT = 3000;
+const PORT = 3000
 
-// TODO use sequelize for db models
+app.use('/user', UsersRouter(sequelize))
 
-app.get('/hello', (req, res) => {
-    db.query('SELECT * FROM users', (error, results) => {
-        if (error) {
-            throw error
-        } else {
-            res.send(results.rows)
-        }
-    })
-})
 
 app.listen(PORT, () => {
     console.log('App listening on port ' + PORT + ', press CTRL+C to terminate')
