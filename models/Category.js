@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
+const sequelize = require('../database/dbConnection')
 
-module.exports = (sequelize) => sequelize.define('category', {
+module.exports = sequelize.define('category', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
