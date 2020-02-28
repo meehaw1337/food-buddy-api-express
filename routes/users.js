@@ -1,10 +1,15 @@
 const router = require('express').Router()
 const Models = require('../models/models')
+const { Op } = require('sequelize')
 
 const { UserProduct, Product, Category } = Models
 
+/* Get products owned by the user */
 router.get('/:id/products/', (req, res) => {
     console.log(new Date().toLocaleString() + '  Request received: GET at user/' + req.params.id + '/products')
+
+    /* If this flag is set to true, return products that the user doesn't own */
+    let unownedFlag = req.query.unowned
 
     UserProduct.findAll({
         where: {
@@ -13,14 +18,29 @@ router.get('/:id/products/', (req, res) => {
             model: Product,
             include: [Category]
         }
-    }).then(products => res.send(products))
-        .catch(error => res.status(400).send(error))
+    }).then(products => {
+        if (unownedFlag == 'true') {
+            Product.findAll({
+                where: {
+                    id: {
+                        [Op.notIn]: products.map(product => product.productId)
+                    }
+                }, include: [Category]
+            }).then(unownedProducts => res.send(unownedProducts))
+                .catch(error => res.status(400).send({ error: error }))
+        } else {
+            res.send(products)
+        }
+    }).catch(error => res.status(400).send(error))
 })
 
+/* Insert a new user's product */
 router.post('/:id/products/', (req, res) => {
     console.log(new Date().toLocaleString() + '  Request received: POST at user/' + req.params.id + '/products')
     console.log(req.body)
 
+    /* TODO: use a unique constraint on product_id 
+    in user_products table (if it's possible with sequelize) */
     UserProduct.findAll({
         where: {
             product_id: req.body.productId,
@@ -30,13 +50,14 @@ router.post('/:id/products/', (req, res) => {
         if (result.length === 0) {
             UserProduct.create(req.body)
                 .then(result => res.send(result))
-                .catch(error => res.status(400).send(error))
+                .catch(error => res.status(400).send({ error: error }))
         } else {
             res.status(400).send({ error: 'This user already owns this product' })
         }
     }).catch(() => res.status(400).send({ error: 'Body of the request is invalid' }))
 })
 
+/* Update user's product quantity */
 router.put('/:id/products/:user_product_id', (req, res) => {
     console.log(new Date().toLocaleString() + '  Request received: PUT at user/' + req.params.id + '/products/' + req.params.user_product_id)
 
@@ -59,7 +80,7 @@ router.put('/:id/products/:user_product_id', (req, res) => {
                     user_id: req.params.id
                 }
             }).then(result => handleInsertResult(result, res))
-                .catch(error => res.status(400).send(error))
+                .catch(error => res.status(400).send({ error: error }))
         }
     }
 })
