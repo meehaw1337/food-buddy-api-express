@@ -17,7 +17,7 @@ router.get('/:id/products/', (req, res) => {
     }).then(products => {
         res.send(products)
     }).catch(error => {
-        res.status(400).send(error)
+        res.send(error)
     })
 })
 
@@ -67,7 +67,7 @@ router.put('/:id/products/:user_product_id', (req, res) => {
                     user_id: req.params.id
                 }
             }).then(result => handleInsertResult(result, res))
-                .catch(error => res.status(400).send({ error: error }))
+                .catch(error => res.status.send({ error: error }))
         }
     }
 })
