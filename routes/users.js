@@ -1,15 +1,11 @@
 const router = require('express').Router()
 const Models = require('../models/models')
-const { Op } = require('sequelize')
 
 const { UserProduct, Product, Category } = Models
 
 /* Get products owned by the user */
 router.get('/:id/products/', (req, res) => {
     console.log(new Date().toLocaleString() + '  Request received: GET at user/' + req.params.id + '/products')
-
-    /* If this flag is set to true, return products that the user doesn't own */
-    let unownedFlag = req.query.unowned
 
     UserProduct.findAll({
         where: {
@@ -19,19 +15,10 @@ router.get('/:id/products/', (req, res) => {
             include: [Category]
         }
     }).then(products => {
-        if (unownedFlag == 'true') {
-            Product.findAll({
-                where: {
-                    id: {
-                        [Op.notIn]: products.map(product => product.productId)
-                    }
-                }, include: [Category]
-            }).then(unownedProducts => res.send(unownedProducts))
-                .catch(error => res.status(400).send({ error: error }))
-        } else {
-            res.send(products)
-        }
-    }).catch(error => res.status(400).send(error))
+        res.send(products)
+    }).catch(error => {
+        res.status(400).send(error)
+    })
 })
 
 /* Insert a new user's product */
@@ -85,9 +72,7 @@ router.put('/:id/products/:user_product_id', (req, res) => {
     }
 })
 
-module.exports = router;
-
-function handleInsertResult(result, response) {
+const handleInsertResult = (result, response) => {
     if (result == 0) {
         response.status(404).send()
     } else {
@@ -96,3 +81,5 @@ function handleInsertResult(result, response) {
 
     response.send()
 }
+
+module.exports = router
