@@ -10,6 +10,9 @@ module.exports = sequelize.define('product', {
     name: {
         type: Sequelize.STRING(30),
         allowNull: false
+    },
+    imageUrl: {
+        type: Sequelize.STRING(100)
     }
 }, {
     timestamps: false,

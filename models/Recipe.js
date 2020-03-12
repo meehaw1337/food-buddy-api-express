@@ -17,6 +17,9 @@ module.exports = sequelize.define('recipe', {
     },
     calories: {
         type: Sequelize.INTEGER
+    },
+    imageUrl: {
+        type: Sequelize.STRING(100)
     }
 }, {
     timestamps: false,
