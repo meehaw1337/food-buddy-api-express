@@ -29,7 +29,9 @@ sequelize.sync({
         "INSERT INTO user_products (quantity, unit, user_id, product_id) VALUES (1, 'piece', 1, 2);" +
         "INSERT INTO user_products (quantity, unit, user_id, product_id) VALUES (2, 'bottle', 1, 3);" +
         "INSERT INTO user_products (quantity, unit, user_id, product_id) VALUES (100, 'ml', 1, 4);" +
-        "INSERT INTO user_products (quantity, unit, user_id, product_id) VALUES (5, 'piece', 1, 5);"
+        "INSERT INTO recipes (name, description, calories, image_url) VALUES ('Spaghetti Bolognese', 'Pasta with minced meat and tomato sauce. Delicious, yet simple to make.', 500, 'https://i.imgur.com/o4v10Mm.jpg');" +
+        "INSERT INTO recipes (name, description, calories, image_url) VALUES ('Caesar salad', 'Salad with lettuce, chicken, crispy bread and delicious sauce.', 400, 'https://i.imgur.com/eHKCWRn.jpg');"
+
     )
 )
 
