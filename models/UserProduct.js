@@ -14,6 +14,14 @@ module.exports = sequelize.define('user_product', {
     unit: {
         type: Sequelize.STRING(30),
         allowNull: false,
+    },
+    userId: {
+        type: Sequelize.INTEGER,
+        unique: 'user_products_unique_constraint'
+    },
+    productId: {
+        type: Sequelize.INTEGER,
+        unique: 'user_products_unique_constraint'
     }
 }, {
     timestamps: false,

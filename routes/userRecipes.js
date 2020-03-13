@@ -9,7 +9,8 @@ router.get('/favourite/', (req, res) => {
     UserFavouriteRecipe.findAll({
         where: {
             userId: req.params.id
-        }
+        },
+        include: [Recipe]
     }).then(result => res.send(result))
 })
 
@@ -17,6 +18,38 @@ router.get('/available/', (req, res) => {
     if (validateUserId(req, res)) {
         getAvailableRecipes(req.params.id)
             .then(result => res.send(result))
+    }
+})
+
+router.post('/favourite/', (req, res) => {
+    const recipeId = req.query.recipeId
+
+    if (recipeId == undefined) {
+        res.status(400).send('Required parameter: recipeId missing')
+    } else {
+        UserFavouriteRecipe.create({
+            recipeId: recipeId,
+            userId: req.params.id
+        })
+            .then(result => res.send(result))
+            .catch(error => res.send({ error: error }))
+    }
+})
+
+router.delete('/favourite/', (req, res) => {
+    const recipeId = req.query.recipeId
+
+    if (recipeId == undefined) {
+        res.status(400).send('Required parameter: recipeId missing')
+    } else {
+        UserFavouriteRecipe.destroy({
+            where: {
+                recipeId: recipeId,
+                userId: req.params.id
+            }
+        })
+            .then(result => res.sendStatus(204))
+            .catch(error => res.send({ error: error }))
     }
 })
 

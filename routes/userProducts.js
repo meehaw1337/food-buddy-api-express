@@ -26,23 +26,9 @@ router.post('/', (req, res) => {
     console.log(new Date().toLocaleString() + '  Request received: POST at user/' + req.params.id + '/products')
     console.log(req.body)
 
-    /* TODO: use a unique constraint on product_id 
-    in user_products table (if it's possible with sequelize)
-    possible solution: use sequelize.query to create an unique constraint */
-    UserProduct.findAll({
-        where: {
-            product_id: req.body.productId,
-            user_id: req.body.userId
-        }
-    }).then(result => {
-        if (result.length === 0) {
-            UserProduct.create(req.body)
-                .then(result => res.send(result))
-                .catch(error => res.status(400).send({ error: error }))
-        } else {
-            res.status(400).send({ error: 'This user already owns this product' })
-        }
-    }).catch(() => res.status(400).send({ error: 'Body of the request is invalid' }))
+    UserProduct.create(req.body)
+        .then(result => res.send(result))
+        .catch(error => res.status(400).send({ error: error }))
 })
 
 /* Update user's product quantity */
